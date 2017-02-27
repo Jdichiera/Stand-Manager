@@ -17,6 +17,8 @@
 #include <cstdlib>
 #include <iostream>
 #include <list>
+#include <fstream>
+#include <sstream>
 /*
  * 
  */
@@ -25,45 +27,57 @@
 class Stand{
 public:
     int inventoryNumber;
+    int cost;
     Stand();
-    //Stand(int);
-    //Stand(const Stand &obj);
-    ~Stand(){
-        //std::cout << "Deleting stand " << getInventoryNumber() << std::endl;
-    }
+    ~Stand(){};
     int getInventoryNumber(){
         return inventoryNumber;
     }
+    int getCost(){
+        return cost;
+    }
     void setInventoryNumber(int invNumber){
         inventoryNumber = invNumber;
+    }
+    void setCost(int standcost){
+        cost = standcost;
     }
     //private:
       //int *ptr;
 };
 Stand::Stand(){
     inventoryNumber = 0;
+    cost = 0;
 }
 
 //Function declarations
-void displayMenu(std::list<Stand> );
+void displayMenu( );
 //void checkOutStand(std::map<Stand, int> standMap);
 //void checkInStand(std::map<Stand, int > standMap);
 //void standStatus(std::map<Stand, int> standMap);
-void runReport(const std::list<Stand> &);
-void addStand(std::list<Stand> );
-void removeStand(std::list<Stand> s);
-int quitProgram(std::list<Stand> s);
+void runReport();
+void addStand();
+void removeStand();
+int quitProgram();
+void save();
+void load();
 
-
+//Global
+//std::ofstream file;
+std::list<Stand> standCollection;
 
 int main(int argc, char** argv) {
+    load();
+    
+    //file.open("inventory.txt");
+    
     //std::map<Stand, int> standMap;
-    std::list<Stand> standCollection;
-    displayMenu(standCollection);
+    
+    displayMenu();
     //return 0;
 }
 
-void displayMenu(std::list<Stand> standCollection){
+void displayMenu(){
     int menuSelection = 0;
     std::cout << "--== Main Menu ==--" << std::endl;
 //    std::cout << "1. Check Out Stand" << std::endl;
@@ -86,22 +100,23 @@ void displayMenu(std::list<Stand> standCollection){
 //            standStatus(standMap);
 //            break;
         case 4 :
-            runReport(standCollection);
+            runReport();
             break;
         case 5 :
-            addStand(standCollection);
+            addStand();
             break;
         case 6 :
-            removeStand(standCollection);
+            removeStand();
             break;
         case 7 :
-            quitProgram(standCollection);
+            quitProgram();
             break;
         default :
-            displayMenu(standCollection);
+            displayMenu();
             break;
     }
 };
+
 
 //void checkOutStand(std::map<Stand, int> standMap){
 //    std::cout << "Check Out Stand Function" << std::endl;
@@ -115,30 +130,34 @@ void displayMenu(std::list<Stand> standCollection){
 //    std::cout << "Stand Status Function" << std::endl;
 //    displayMenu(standMap);
 ////};
-void runReport(const std::list<Stand> &standCollection){
+void runReport(){
     std::cout << "Run Report Function" << std::endl;
+    std::cout << std:: endl << "--== Stand Inventory Report ==--" << std::endl;
     for(auto stand : standCollection){
-        std::cout << stand.inventoryNumber << std::endl;
+        std::cout << "Inventory #: " << stand.inventoryNumber << std::endl;
+        std::cout << "Cost : $" << stand.cost << std::endl;
+        std::cout << "-----" << std::endl;
     }
-//    for(int i = 0; i < standCollection.size(); i++){
-//        std::cout << standCollection[i];
-//    }
-//    for (auto ci = standCollection.begin(); ci != standCollection.end(); ++ci)
-//        std::cout << *ci << " ";
-    displayMenu(standCollection);
+    std::cout << std:: endl << "--== End Report ==--" << std::endl;
+    
+    displayMenu();
 };
-void addStand(std::list<Stand> standCollection){
+void addStand(){
     int invNumber = 0;
+    int standCost = 0;
     std::cout << "Add Stand Function" << std::endl;
     std::cout << "Please enter inventory number: ";
     std::cin >> invNumber;
+    std::cout << "Please enter stand cost : $";
+    std::cin >> standCost;
     Stand stand;
     stand.setInventoryNumber(invNumber);
+    stand.setCost(standCost);
     standCollection.push_back(stand);
-    displayMenu(standCollection);
+    displayMenu();
    
 };
-void removeStand(std::list<Stand> standCollection){
+void removeStand(){
     int response = 0;
     std::cout << "Remove Stand Function" << std::endl;
     std::cout << "Please enter stand to remove: " << std::endl;
@@ -149,17 +168,59 @@ void removeStand(std::list<Stand> standCollection){
             standCollection.erase(iterator);
         }
     }
-    displayMenu(standCollection);
+    displayMenu();
 };
-int quitProgram(std::list<Stand> standCollection){
+int quitProgram(){
     std::string decision = "";
     std::cout << "Do you want to quit?" << std::endl;
     std::cin >> decision;
     if(decision == "y"){
+        save();
         return 0;
     } else{
-        displayMenu(standCollection);
+        displayMenu();
     }
 };
 
+void save(){
+    std::cout << "Save Function" << std::endl;
+    
+    //open write file
+    std::ofstream writeFile;
+
+    writeFile.open("inventory.sm");
+    
+    for(auto stand : standCollection){
+        writeFile << stand.inventoryNumber << ";" << stand.cost << ";" << std::endl;
+    }
+    writeFile.close();
+};
+
+void load(){
+    std::string standArray[1];
+    std::cout << "loading" << std::endl;
+    Stand stand;
+    std::ifstream file;
+    std::string line;
+    
+    
+    
+    file.open("inventory.sm");
+    while(std::getline(file, line)){
+        int recordLength = 2;
+        int i = 0;
+        size_t pos = 0;
+        std::string tempArray[1];
+        std::string delimiter = ";";
+        
+        while(((pos = line.find(delimiter)) != std::string::npos) && (i < recordLength)){
+            tempArray[i] = line.substr(0, pos);
+            line.erase(0, pos + delimiter.length());
+            i++;
+        }
+        stand.setInventoryNumber(std::stoi(tempArray[0]));
+        stand.setCost(std::stoi(tempArray[1]));
+        standCollection.push_back((stand));
+    }
+};
 
