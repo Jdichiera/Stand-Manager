@@ -42,8 +42,6 @@ public:
     void setCost(int standcost){
         cost = standcost;
     }
-    //private:
-      //int *ptr;
 };
 Stand::Stand(){
     inventoryNumber = 0;
@@ -61,10 +59,12 @@ void removeStand();
 int quitProgram();
 void save();
 void load();
+bool findStand(int searchNumber);
 
 //Global
 //std::ofstream file;
 std::list<Stand> standCollection;
+std::string filename = "inventory.txt";
 
 int main(int argc, char** argv) {
     load();
@@ -142,12 +142,27 @@ void runReport(){
     
     displayMenu();
 };
+bool findStand(int searchNumber){
+    std::cout << "Find Stand Function" << std::endl;
+    for(auto stand : standCollection){
+        if(searchNumber == stand.inventoryNumber){
+            std::cout << "same" << searchNumber << " : " << stand.inventoryNumber << std::endl;
+            return true;
+        };
+    };
+    return false;  
+};
 void addStand(){
     int invNumber = 0;
     int standCost = 0;
+    bool duplicate = false;
     std::cout << "Add Stand Function" << std::endl;
     std::cout << "Please enter inventory number: ";
     std::cin >> invNumber;
+    if(findStand(invNumber)){
+        std::cout << "Stand already exists, returning to menu ..." << std::endl;
+        displayMenu();
+    }
     std::cout << "Please enter stand cost : $";
     std::cin >> standCost;
     Stand stand;
@@ -155,8 +170,10 @@ void addStand(){
     stand.setCost(standCost);
     standCollection.push_back(stand);
     displayMenu();
+}
+    
+    
    
-};
 void removeStand(){
     int response = 0;
     std::cout << "Remove Stand Function" << std::endl;
@@ -188,7 +205,7 @@ void save(){
     //open write file
     std::ofstream writeFile;
 
-    writeFile.open("inventory.sm");
+    writeFile.open(filename);
     
     for(auto stand : standCollection){
         writeFile << stand.inventoryNumber << ";" << stand.cost << ";" << std::endl;
@@ -205,7 +222,7 @@ void load(){
     
     
     
-    file.open("inventory.sm");
+    file.open(filename);
     while(std::getline(file, line)){
         int recordLength = 2;
         int i = 0;
@@ -222,5 +239,6 @@ void load(){
         stand.setCost(std::stoi(tempArray[1]));
         standCollection.push_back((stand));
     }
+    file.close();
 };
 
