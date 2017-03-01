@@ -19,6 +19,8 @@
 #include <list>
 #include <fstream>
 #include <sstream>
+#include <stdlib.h>
+
 /*
  * 
  */
@@ -57,7 +59,7 @@ Stand::Stand(){
 }
 
 //Function declarations
-void displayMenu( );
+void displayMenu();
 void checkOutStand();
 void checkInStand();
 void standStatus();
@@ -66,9 +68,10 @@ void addStand();
 void removeStand();
 int quitProgram();
 bool validateInventoryNumber(int searchNumber);
-Stand selectStand(int searchNumber);
 void save();
 void load();
+void clearScreen();
+void pause();
 
 
 //Global
@@ -76,7 +79,9 @@ void load();
 std::list<Stand> standCollection;
 std::string filename = "inventory.txt";
 
+
 int main(int argc, char** argv) {
+    
     load();
     
     //file.open("inventory.txt");
@@ -86,8 +91,8 @@ int main(int argc, char** argv) {
     displayMenu();
     //return 0;
 }
-
 void displayMenu(){
+    clearScreen();
     int menuSelection = 0;
     std::cout << "--== Main Menu ==--" << std::endl;
     std::cout << "1. Check Out Stand" << std::endl;
@@ -144,6 +149,7 @@ void checkOutStand(){
             }
         }
     }
+    pause();
     displayMenu();
 };
 void checkInStand(){
@@ -162,6 +168,7 @@ void checkInStand(){
             }
         }
     }
+    pause();
     displayMenu();
 };
 void standStatus(){
@@ -179,6 +186,7 @@ void standStatus(){
     }else{
                 std::cout << "Stand not found" << std::endl;
             }
+    pause();
     displayMenu();
 };
 void runReport(){
@@ -191,11 +199,10 @@ void runReport(){
         std::cout << "-----" << std::endl;
     }
     std::cout << std:: endl << "--== End Report ==--" << std::endl;
-    
+    pause();
     displayMenu();
 };
 bool validateInventoryNumber(int searchNumber){
-    std::cout << "Find Stand Function" << std::endl;
     for(auto stand : standCollection){
         if(searchNumber == stand.inventoryNumber){
             std::cout << "same" << searchNumber << " : " << stand.inventoryNumber << std::endl;
@@ -208,7 +215,6 @@ void addStand(){
     int invNumber = 0;
     int standCost = 0;
     bool duplicate = false;
-    std::cout << "Add Stand Function" << std::endl;
     std::cout << "Please enter inventory number: ";
     std::cin >> invNumber;
     if(validateInventoryNumber(invNumber)){
@@ -221,6 +227,7 @@ void addStand(){
     stand.setInventoryNumber(invNumber);
     stand.setCost(standCost);
     standCollection.push_back(stand);
+    pause();
     displayMenu();
 };
     
@@ -228,7 +235,6 @@ void addStand(){
    
 void removeStand(){
     int response = 0;
-    std::cout << "Remove Stand Function" << std::endl;
     std::cout << "Please enter stand to remove: " << std::endl;
     std::cin >> response;
     std::list<Stand>::iterator iterator;
@@ -237,6 +243,7 @@ void removeStand(){
             standCollection.erase(iterator);
         }
     }
+    pause();
     displayMenu();
 };
 int quitProgram(){
@@ -247,13 +254,13 @@ int quitProgram(){
         save();
         return 0;
     } else{
+        
+        std::cin.ignore();
         displayMenu();
     }
 };
 
 void save(){
-    std::cout << "Save Function" << std::endl;
-    
     //open write file
     std::ofstream writeFile;
 
@@ -267,7 +274,6 @@ void save(){
 };
 
 void load(){
-    //std::string standArray[1];
     std::cout << "loading" << std::endl;
     Stand stand;
     std::ifstream file;
@@ -306,14 +312,21 @@ void load(){
     file.close();
 };
 
-Stand selectStand(int inventoryNumber){
-    Stand selectedStand;
-    //selectedStand.inventoryNumber = -1;
-    for(auto stand : standCollection){
-        if(inventoryNumber == stand.inventoryNumber){
-            //selectedStand = stand;
-            return stand;
-        }
-    }
-    //return selectedStand;
+
+void clearScreen(){
+    int os;
+    #ifdef _WIN32
+    std::system("CLS");
+    #elif __APPLE__
+    std::system("CLEAR");
+#endif
 }
+
+void pause(){
+    std::cout << "Press ENTER to continue" << std::endl;
+    #ifdef _WIN32
+    std::system("pause");
+    #elif __APPLE__
+    std::system("read");
+#endif
+};
