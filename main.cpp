@@ -153,24 +153,17 @@ void displayMenu(){
                 displayMenu();
                 break;
         }
-
 };
 
 //Allows user to check out a stand.
 void checkOutStand(){
     int inventoryNumber;
-    //std::list<Stand> availableStands = getCollectionSubset("out");
     
     clearScreen();
     std::cout << "--== Check Out Stand ==--" << std::endl;
     std::cout << "Available stands : " << std::endl;
     
-//    if(availableStands.empty()){
-//        std::cout << "There are no available stands" << std::endl;
-//        pause();
-//        displayMenu();
-//    }else{
-        displayInventory("in");
+        displayInventory("available");
         std::cout << "Enter the inventory number of the stand you want to check out." 
                     << "\n(Enter -1 to return to menu)" << std::endl;
         std::cin >> inventoryNumber;
@@ -194,28 +187,18 @@ void checkOutStand(){
             }
         pause();
         displayMenu();
-        }
-    //}
+    }
 };
 
 //Allows users to check in a stand that has been checked out.
 void checkInStand(){
     int inventoryNumber;
-    //std::list<Stand> availableStands = getCollectionSubset("in");
     clearScreen();
     
     std::cout << "--== Check In Stand ==--" << std::endl;
     std::cout << "Stands currently checked out:" << std::endl;
     
-//    if(availableStands.empty()){
-//        std::cout << "There are no available stands" << std::endl;
-//        pause();
-//        displayMenu();
-//    }else{
-//        for(auto stand : availableStands){
-//            std::cout << "Inventory# : " << stand.getInventoryNumber() << std::endl;
-//        }
-        displayInventory("out");
+    displayInventory("checkedout");
     
     std::cout << "Enter the inventory number of the stand you want to check out." 
                 << "\n(Enter -1 to return to menu)" << std::endl;
@@ -243,8 +226,6 @@ void checkInStand(){
     pause();
     displayMenu();
     }
-    
-   // }
 };
 
 //Displays the status of a stand located by inventory number
@@ -253,6 +234,7 @@ void standStatus(){
     clearScreen();
     
     std::cout << "What stand do you want to view?" << std::endl;
+    displayInventory("all");
     std::cin >> inventoryNumber;
     if(validateInventoryNumber(inventoryNumber)){
         for(auto& stand : standCollection){
@@ -296,6 +278,7 @@ void runReport(){
 void addStand(){
     clearScreen();
     std::cout << "--== Add Stand to Inventory ==--" << std::endl;
+    displayInventory("all");
     int invNumber = 0;
     int standCost = 0;
     std::string description = "";
@@ -326,6 +309,7 @@ void addStand(){
 void removeStand(){
     clearScreen();
     std::cout << "--== Remove Stand from Inventory ==--" << std::endl;
+    displayInventory("all");
     
     int response = 0;
     std::cout << "Please enter stand to remove: " << std::endl;
@@ -419,51 +403,29 @@ void load(){
     file.close();
 };
 
-//Gets a subset of the collection. User can pass in whether or not they want a
-//set of stands that are checked out or stands that are checked in
-//std::list<Stand> getCollectionSubset(std::string type){
-//    std::list<Stand> subset;
-//    
-//    
-//    }else if(type == "in") {
-//        for(auto stand : standCollection){
-//            if(stand.getCheckedOut()){
-//                subset.push_back(stand);
-//            }
-//        }
-//    }
-//    return subset;
-//};
-
 //Displays the inventory based on the input flag : all, checkedOut, checkedIn
 void displayInventory(std::string type){
-    std::cout << "display Inv" << std::endl;
     std::list<Stand> stands;
         
-    if(type == "out"){
-        std::cout << "out" << std::endl;
+    if(type == "checkedout"){
         for(auto stand : standCollection){
-            if(!stand.getCheckedOut()){
+            if(stand.getCheckedOut() == true){
                 stands.push_back(stand);
             }
         }
-    }else if(type == "in"){
-        std::cout << "in" << std::endl;
+    }else if(type == "available"){
         for(auto stand : standCollection){
-            if(stand.getCheckedOut()){
+            if(stand.getCheckedOut() == false){
                 stands.push_back(stand);
             }
         }
-    }else{
-        std::cout << "def" << std::endl;
+    }else if (type == "all"){
         stands = standCollection;
     }
-    std::cout << stands.size() << std::endl;
+    
     for (Stand stand : stands){
         std::cout << "Inventory# : " << stand.getInventoryNumber() << std::endl;
     }
-
-    
 };
 
 //Helper function that validates an inventory number
