@@ -30,7 +30,7 @@
 class Stand{
 private:
     int inventoryNumber;
-    int cost;
+    double cost;
     bool checkedOut;
     std::string description;
     double income;
@@ -39,7 +39,7 @@ public:
     int getInventoryNumber(){
         return inventoryNumber;
     }
-    int getCost(){
+    double getCost(){
         return cost;
     }
     bool getCheckedOut(){
@@ -58,7 +58,7 @@ public:
     void setInventoryNumber(int invNumber){
         inventoryNumber = invNumber;
     }
-    void setCost(int standcost){
+    void setCost(double standcost){
         cost = standcost;
     }
     void setDescription(std::string newDescription){
@@ -75,7 +75,7 @@ public:
 
 Stand::Stand(){
     inventoryNumber = 0;
-    cost = 0;
+    cost = 0.00;
     checkedOut = false;
     description = "";
     income = 0.00;
@@ -96,7 +96,8 @@ void load();
 void clearScreen();
 void pause();
 bool validateInventoryNumber(int searchNumber);
-std::list<Stand> getCollectionSubset(std::string type);
+//std::list<Stand> getCollectionSubset(std::string type);
+void displayInventory(std::string type);
 
 
 //Global variables
@@ -122,7 +123,6 @@ void displayMenu(){
     std::cout << "6. RemoveStand" << std::endl;
     std::cout << "7. Quit Stand Manager" << std::endl;
     std::cout << "Please make a selection between 1 and 7" << std::endl;
-    std::cin.clear();
     std::cin >> menuSelection;
 
         switch(menuSelection){
@@ -148,8 +148,8 @@ void displayMenu(){
                 quitProgram();
                 break;
             default :
-                    std::cin.clear();
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 displayMenu();
                 break;
         }
@@ -159,66 +159,64 @@ void displayMenu(){
 //Allows user to check out a stand.
 void checkOutStand(){
     int inventoryNumber;
-    std::list<Stand> availableStands = getCollectionSubset("out");
+    //std::list<Stand> availableStands = getCollectionSubset("out");
     
     clearScreen();
     std::cout << "--== Check Out Stand ==--" << std::endl;
     std::cout << "Available stands : " << std::endl;
     
-    if(availableStands.empty()){
-        std::cout << "There are no available stands" << std::endl;
-        pause();
-        displayMenu();
-    }else{
-        for(auto stand : availableStands){
-            std::cout << "Inventory# : " << stand.getInventoryNumber() << std::endl;
-        }
-    }
-    
-    std::cout << "Enter the inventory number of the stand you want to check out." 
-                << "\n(Enter -1 to return to menu)" << std::endl;
-    std::cin >> inventoryNumber;
-    
-    if(inventoryNumber < 0){
-        std::cout << "Returning to the main menu ..." << std::endl;
-        pause();
-        displayMenu();
-    }else{
-        if(validateInventoryNumber(inventoryNumber)){
-            for(auto& stand : standCollection){
-                if(inventoryNumber == stand.getInventoryNumber()){
-                    if(!stand.getCheckedOut()){
-                        std::cout << "Checking out stand" << std::endl;
-                        stand.setCheckedOut(true);
-                    }else{
-                        std::cout << "Stand already checked out" << std::endl;
+//    if(availableStands.empty()){
+//        std::cout << "There are no available stands" << std::endl;
+//        pause();
+//        displayMenu();
+//    }else{
+        displayInventory("in");
+        std::cout << "Enter the inventory number of the stand you want to check out." 
+                    << "\n(Enter -1 to return to menu)" << std::endl;
+        std::cin >> inventoryNumber;
+
+        if(inventoryNumber == -1){
+            std::cout << "Returning to the main menu ..." << std::endl;
+            pause();
+            displayMenu();
+        }else{
+            if(validateInventoryNumber(inventoryNumber)){
+                for(auto& stand : standCollection){
+                    if(inventoryNumber == stand.getInventoryNumber()){
+                        if(!stand.getCheckedOut()){
+                            std::cout << "Checking out stand" << std::endl;
+                            stand.setCheckedOut(true);
+                        }else{
+                            std::cout << "Stand already checked out" << std::endl;
+                        }
                     }
                 }
             }
+        pause();
+        displayMenu();
         }
-    }
-    pause();
-    displayMenu();
+    //}
 };
 
 //Allows users to check in a stand that has been checked out.
 void checkInStand(){
     int inventoryNumber;
-    std::list<Stand> availableStands = getCollectionSubset("in");
+    //std::list<Stand> availableStands = getCollectionSubset("in");
     clearScreen();
     
     std::cout << "--== Check In Stand ==--" << std::endl;
     std::cout << "Stands currently checked out:" << std::endl;
     
-    if(availableStands.empty()){
-        std::cout << "There are no available stands" << std::endl;
-        pause();
-        displayMenu();
-    }else{
-        for(auto stand : availableStands){
-            std::cout << "Inventory# : " << stand.getInventoryNumber() << std::endl;
-        }
-    }
+//    if(availableStands.empty()){
+//        std::cout << "There are no available stands" << std::endl;
+//        pause();
+//        displayMenu();
+//    }else{
+//        for(auto stand : availableStands){
+//            std::cout << "Inventory# : " << stand.getInventoryNumber() << std::endl;
+//        }
+        displayInventory("out");
+    
     std::cout << "Enter the inventory number of the stand you want to check out." 
                 << "\n(Enter -1 to return to menu)" << std::endl;
     std::cin >> inventoryNumber;
@@ -242,9 +240,11 @@ void checkInStand(){
                 }
             }
         }
-    }
     pause();
     displayMenu();
+    }
+    
+   // }
 };
 
 //Displays the status of a stand located by inventory number
@@ -258,10 +258,10 @@ void standStatus(){
         for(auto& stand : standCollection){
             if(inventoryNumber == stand.getInventoryNumber()){
                 std::cout << "Inventory #: " << stand.getInventoryNumber() << std::endl;
-                std::cout << "Cost : $" << stand.getCost() << std::endl;
-                std::cout << "Checked Out: " << stand.getCheckedOut() << std::endl;
-                std::cout << "Description: " << stand.getDescription() << std::endl;
-                std::cout << "Income Generated" << std::fixed << std::setprecision(2) << stand.getIncome() << std::endl;
+                std::cout << "Cost : $" << std::fixed << std::setprecision(2) << stand.getCost() << std::endl;
+                std::cout << "Checked Out : " << stand.getCheckedOut() << std::endl;
+                std::cout << "Description : " << stand.getDescription() << std::endl;
+                std::cout << "Income Generated : $" << std::fixed << std::setprecision(2) << stand.getIncome() << std::endl;
             }
         }
     }else{
@@ -300,7 +300,6 @@ void addStand(){
     int standCost = 0;
     std::string description = "";
     
-    //bool duplicate = false;
     std::cout << "Please enter inventory number: ";
     std::cin >> invNumber;
     if(validateInventoryNumber(invNumber)){
@@ -343,7 +342,7 @@ void removeStand(){
 
 //Quits the program
 int quitProgram(){
-    clearScreen();
+    //clearScreen();
     std::cout << "--== Quit Program ==--" << std::endl;
     
     std::string decision = "";
@@ -400,7 +399,7 @@ void load(){
             i++;
         }
         inventoryNumber = std::stoi(tempArray[0]);
-        cost = std::stoi(tempArray[1]);
+        cost = std::stod(tempArray[1]);
         if(tempArray[2] == "1"){
             checkedOut = true;
         }else{
@@ -422,31 +421,55 @@ void load(){
 
 //Gets a subset of the collection. User can pass in whether or not they want a
 //set of stands that are checked out or stands that are checked in
-std::list<Stand> getCollectionSubset(std::string type){
-    std::list<Stand> subset;
-    
+//std::list<Stand> getCollectionSubset(std::string type){
+//    std::list<Stand> subset;
+//    
+//    
+//    }else if(type == "in") {
+//        for(auto stand : standCollection){
+//            if(stand.getCheckedOut()){
+//                subset.push_back(stand);
+//            }
+//        }
+//    }
+//    return subset;
+//};
+
+//Displays the inventory based on the input flag : all, checkedOut, checkedIn
+void displayInventory(std::string type){
+    std::cout << "display Inv" << std::endl;
+    std::list<Stand> stands;
+        
     if(type == "out"){
+        std::cout << "out" << std::endl;
         for(auto stand : standCollection){
             if(!stand.getCheckedOut()){
-                subset.push_back(stand);
+                stands.push_back(stand);
+            }
+        }
+    }else if(type == "in"){
+        std::cout << "in" << std::endl;
+        for(auto stand : standCollection){
+            if(stand.getCheckedOut()){
+                stands.push_back(stand);
             }
         }
     }else{
-        for(auto stand : standCollection){
-            if(stand.getCheckedOut()){
-                subset.push_back(stand);
-            }
-        }
+        std::cout << "def" << std::endl;
+        stands = standCollection;
     }
-    return subset;
+    std::cout << stands.size() << std::endl;
+    for (Stand stand : stands){
+        std::cout << "Inventory# : " << stand.getInventoryNumber() << std::endl;
+    }
+
+    
 };
 
 //Helper function that validates an inventory number
 bool validateInventoryNumber(int searchNumber){
     for(auto stand : standCollection){
         if(searchNumber == stand.getInventoryNumber()){
-            std::cout << "same" << searchNumber << " : " 
-                        << stand.getInventoryNumber() << std::endl;
             return true;
         };
     };
@@ -455,13 +478,12 @@ bool validateInventoryNumber(int searchNumber){
 
 //Detects the users OS and then clears the screen
 void clearScreen(){
-    int os;
     #ifdef _WIN32
     std::system("CLS");
     #elif __APPLE__
     std::system("CLEAR");
 #endif
-}
+};
 
 //Detects the users OS and sends the appropriate pause command.
 void pause(){
