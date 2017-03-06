@@ -23,23 +23,23 @@
 #include <sstream>
 #include <stdlib.h>
 
-//Function declarations
-void displayMenu();
-void checkOutStand();
-void checkInStand();
-void standStatus();
-void runReport();
-void addStand();
-void removeStand();
-int quitProgram();
+#include "stand.h"
 
-void save();
-void load(std::string filename);
+//Function declarations
+void displayMenu(std::list<Stand> *standCollection);
+void checkOutStand(std::list<Stand> *standCollection);
+void checkInStand(std::list<Stand> *standCollection);
+void standStatus(std::list<Stand> *standCollection);
+void runReport(std::list<Stand> *standCollection);
+void addStand(std::list<Stand> *standCollection);
+void removeStand(std::list<Stand> *standCollection);
+int quitProgram(std::list<Stand> *standCollection, std::string fileName);
+
+void save(std::list<Stand> *standCollection, std::string fileName);
+void load(std::string fileName, std::list<Stand> *standCollection);
 void clearScreen();
 void pause();
-bool validateInventoryNumber(int searchNumber);
-//std::list<Stand> getCollectionSubset(std::string type);
-void displayInventory(std::string type);
-
+bool validateInventoryNumber(std::list<Stand> *standCollection, int searchNumber);
+void displayInventory(std::list<Stand> *standCollection, std::string type);
 #endif /* STANDMANAGER_H */
 

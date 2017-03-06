@@ -1,7 +1,11 @@
 #include "standmanager.h"
 
+
+
+
+
 //This function will display the main menu
-void displayMenu(){
+void displayMenu(std::list<Stand> *standCollection, std::string fileName){
     clearScreen();
     int menuSelection = 0;
     std::cout << "--== Main Menu ==--" << std::endl;
@@ -17,43 +21,43 @@ void displayMenu(){
 
         switch(menuSelection){
             case 1 :
-                checkOutStand();
+                checkOutStand(standCollection);
                 break;
             case 2 :
-                checkInStand();
+                checkInStand(standCollection);
                 break;
             case 3 :
-                standStatus();
+                standStatus(standCollection);
                 break;
             case 4 :
-                runReport();
+                runReport(standCollection);
                 break;
             case 5 :
-                addStand();
+                addStand(standCollection);
                 break;
             case 6 :
-                removeStand();
+                removeStand(standCollection);
                 break;
             case 7 :
-                quitProgram();
+                quitProgram(standCollection, fileName);
                 break;
             default :
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                displayMenu();
+                displayMenu(standCollection, fileName);
                 break;
         }
 };
 
 //Allows user to check out a stand.
-void checkOutStand(){
+void checkOutStand(std::list<Stand> *standCollection){
     int inventoryNumber;
     
     clearScreen();
     std::cout << "--== Check Out Stand ==--" << std::endl;
     std::cout << "Available stands : " << std::endl;
     
-        displayInventory("available");
+        displayInventory(standCollection, "available");
         std::cout << "Enter the inventory number of the stand you want to check out." 
                     << "\n(Enter -1 to return to menu)" << std::endl;
         std::cin >> inventoryNumber;
@@ -61,10 +65,10 @@ void checkOutStand(){
         if(inventoryNumber == -1){
             std::cout << "Returning to the main menu ..." << std::endl;
             pause();
-            displayMenu();
+            displayMenu(standCollection);
         }else{
-            if(validateInventoryNumber(inventoryNumber)){
-                for(auto& stand : standCollection){
+            if(validateInventoryNumber(standCollection, inventoryNumber)){
+                for(auto stand : *standCollection){
                     if(inventoryNumber == stand.getInventoryNumber()){
                         if(!stand.getCheckedOut()){
                             std::cout << "Checking out stand" << std::endl;
@@ -76,29 +80,29 @@ void checkOutStand(){
                 }
             }
         pause();
-        displayMenu();
+        displayMenu(standCollection, fileName);
     }
 };
 
 //Allows users to check in a stand that has been checked out.
-void checkInStand(){
+void checkInStand(std::list<Stand> *standCollection){
     int inventoryNumber;
     clearScreen();
     
     std::cout << "--== Check In Stand ==--" << std::endl;
     std::cout << "Stands currently checked out:" << std::endl;
     
-    displayInventory("checkedout");
+    displayInventory(standCollection, "checkedout");
     
     std::cout << "Enter the inventory number of the stand you want to check out." 
                 << "\n(Enter -1 to return to menu)" << std::endl;
     std::cin >> inventoryNumber;
     if(inventoryNumber < 0){
         std::cout << "Returning to the main menu ..." << std::endl;
-        displayMenu();
+        displayMenu(standCollection, fileName);
     }else{
-        if(validateInventoryNumber(inventoryNumber)){
-            for(auto& stand : standCollection){
+        if(validateInventoryNumber(standCollection, inventoryNumber)){
+            for(auto stand : *standCollection){
                 if(inventoryNumber == stand.getInventoryNumber()){
                     if(stand.getCheckedOut()){
                         double income = 0;
@@ -114,20 +118,20 @@ void checkInStand(){
             }
         }
     pause();
-    displayMenu();
+    displayMenu(standCollection, fileName);
     }
 };
 
 //Displays the status of a stand located by inventory number
-void standStatus(){
+void standStatus(std::list<Stand> *standCollection){
     int inventoryNumber;
     clearScreen();
     
     std::cout << "What stand do you want to view?" << std::endl;
-    displayInventory("all");
+    displayInventory(standCollection, "all");
     std::cin >> inventoryNumber;
-    if(validateInventoryNumber(inventoryNumber)){
-        for(auto& stand : standCollection){
+    if(validateInventoryNumber(standCollection, inventoryNumber)){
+        for(auto stand : *standCollection){
             if(inventoryNumber == stand.getInventoryNumber()){
                 std::cout << "Inventory #: " << stand.getInventoryNumber() << std::endl;
                 std::cout << "Cost : $" << std::fixed << std::setprecision(2) << stand.getCost() << std::endl;
@@ -140,11 +144,11 @@ void standStatus(){
                 std::cout << "Stand not found" << std::endl;
             }
     pause();
-    displayMenu();
+    displayMenu(standCollection, fileName);
 };
 
 //Runs a report of the stands in inventory.
-void runReport(){
+void runReport(std::list<Stand> *standCollection){
     clearScreen();
     
     std::cout << "--== Stand Inventory Report ==--" << std::endl;
@@ -152,7 +156,7 @@ void runReport(){
                 << std::setw(10) << "Cost" 
                 << std::setw(10) << "Out" 
                 << std::setw(10) << "Income" << std::endl;
-    for(auto stand : standCollection){
+    for(auto stand : *standCollection){
         std::cout << std::setw(10) << std::right <<  stand.getInventoryNumber() 
                     << std::setw(10) << stand.getCost() 
                     << std::setw(10) << stand.getCheckedOut() 
@@ -161,23 +165,23 @@ void runReport(){
     }
     std::cout << std:: endl << "--== End Report ==--" << std::endl;
     pause();
-    displayMenu();
+    displayMenu(standCollection, fileName);
 };
 
 //Adds a stand to the stand inventory
-void addStand(){
+void addStand(std::list<Stand> *standCollection){
     clearScreen();
     std::cout << "--== Add Stand to Inventory ==--" << std::endl;
-    displayInventory("all");
+    displayInventory(standCollection, "all");
     int invNumber = 0;
     int standCost = 0;
     std::string description = "";
     
     std::cout << "Please enter inventory number: ";
     std::cin >> invNumber;
-    if(validateInventoryNumber(invNumber)){
+    if(validateInventoryNumber(standCollection, invNumber)){
         std::cout << "Stand already exists, returning to menu ..." << std::endl;
-        displayMenu();
+        displayMenu(standCollection, fileName);
     }
     std::cout << "Please enter stand cost : $";
     std::cin >> standCost;
@@ -189,33 +193,33 @@ void addStand(){
     stand.setCost(standCost);
     stand.setDescription(description);
     
-    standCollection.push_back(stand);
+    standCollection->push_back(stand);
     
     pause();
-    displayMenu();
+    displayMenu(standCollection, fileName);
 };
     
 //Remove a stand from the inventory
-void removeStand(){
+void removeStand(std::list<Stand> *standCollection){
     clearScreen();
     std::cout << "--== Remove Stand from Inventory ==--" << std::endl;
-    displayInventory("all");
+    displayInventory(standCollection, "all");
     
     int response = 0;
     std::cout << "Please enter stand to remove: " << std::endl;
     std::cin >> response;
     std::list<Stand>::iterator iterator;
-    for(iterator = standCollection.begin(); iterator != standCollection.end(); iterator++){
+    for(iterator = standCollection->begin(); iterator != standCollection->end(); iterator++){
         if((*iterator).getInventoryNumber() == response){
-            standCollection.erase(iterator);
+            standCollection->erase(iterator);
         }
     }
     pause();
-    displayMenu();
+    displayMenu(standCollection, fileName);
 };
 
 //Quits the program
-int quitProgram(){
+int quitProgram(std::list<Stand> *standCollection, std::string fileName){
     //clearScreen();
     std::cout << "--== Quit Program ==--" << std::endl;
     
@@ -223,21 +227,21 @@ int quitProgram(){
     std::cout << "Do you want to quit?" << std::endl;
     std::cin >> decision;
     if(decision == "y"){
-        save();
+        save(standCollection, fileName);
         return 0;
     } else{
-        displayMenu();
+        displayMenu(standCollection, fileName);
     }
 };
 
 //Saves the inventory to a text file
-void save(){
+void save(std::list<Stand> *standCollection, std::string fileName){
     //open write file
     std::ofstream writeFile;
 
-    writeFile.open(filename);
+    writeFile.open(fileName);
     
-    for(auto stand : standCollection){
+    for(auto stand : *standCollection){
         writeFile << stand.getInventoryNumber() << ";" << stand.getCost() << ";" 
                     << stand.getCheckedOut() << ";" << stand.getIncome() << ";"
                     << stand.getDescription() << std::endl;
@@ -246,13 +250,13 @@ void save(){
 };
 
 //Loads the inventory text file into a new stand collection
-void load(std::string fileName){
+void load(std::string fileName, std::list<Stand> *standCollection){
     std::cout << "loading" << std::endl;
     Stand stand;
     std::ifstream file;
     std::string line;
     
-    file.open(filename);
+    file.open(fileName);
     while(std::getline(file, line)){
         int recordLength = 5;
         int i = 0;
@@ -288,29 +292,29 @@ void load(std::string fileName){
         stand.setIncome(income);
         stand.setDescription(description);
         
-        standCollection.push_back((stand));
+        standCollection->push_back((stand));
     }
     file.close();
 };
 
 //Displays the inventory based on the input flag : all, checkedOut, checkedIn
-void displayInventory(std::string type){
+void displayInventory(std::list<Stand> *standCollection, std::string type){
     std::list<Stand> stands;
         
     if(type == "checkedout"){
-        for(auto stand : standCollection){
+        for(auto stand : *standCollection){
             if(stand.getCheckedOut() == true){
                 stands.push_back(stand);
             }
         }
     }else if(type == "available"){
-        for(auto stand : standCollection){
+        for(auto stand : *standCollection){
             if(stand.getCheckedOut() == false){
                 stands.push_back(stand);
             }
         }
     }else if (type == "all"){
-        stands = standCollection;
+        stands = *standCollection;
     }
     
     for (Stand stand : stands){
@@ -319,8 +323,8 @@ void displayInventory(std::string type){
 };
 
 //Helper function that validates an inventory number
-bool validateInventoryNumber(int searchNumber){
-    for(auto stand : standCollection){
+bool validateInventoryNumber(std::list<Stand> *standCollection, int searchNumber){
+    for(auto stand : *standCollection){
         if(searchNumber == stand.getInventoryNumber()){
             return true;
         };
