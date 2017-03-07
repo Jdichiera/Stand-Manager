@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
     std::list<Stand> standCollection;
     std::string fileName = "inventory.txt";
     
-    load(fileName, &standCollection);
-    displayMenu(&standCollection, fileName);
+    load(fileName, standCollection);
+    displayMenu(standCollection, fileName);
 }
 

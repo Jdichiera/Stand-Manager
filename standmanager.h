@@ -26,20 +26,20 @@
 #include "stand.h"
 
 //Function declarations
-void displayMenu(std::list<Stand> *standCollection);
-void checkOutStand(std::list<Stand> *standCollection);
-void checkInStand(std::list<Stand> *standCollection);
-void standStatus(std::list<Stand> *standCollection);
-void runReport(std::list<Stand> *standCollection);
-void addStand(std::list<Stand> *standCollection);
-void removeStand(std::list<Stand> *standCollection);
-int quitProgram(std::list<Stand> *standCollection, std::string fileName);
+int displayMenu(std::list<Stand> &standCollection, std::string fileName);
+void checkOutStand(std::list<Stand> &standCollection);
+void checkInStand(std::list<Stand> &standCollection);
+void standStatus(std::list<Stand> &standCollection);
+void runReport(std::list<Stand> &standCollection);
+void addStand(std::list<Stand> &standCollection);
+void removeStand(std::list<Stand> &standCollection);
+void quitProgram(std::list<Stand> &standCollection, std::string fileName);
 
-void save(std::list<Stand> *standCollection, std::string fileName);
-void load(std::string fileName, std::list<Stand> *standCollection);
+void save(std::list<Stand> &standCollection, std::string fileName);
+void load(std::string fileName, std::list<Stand> &standCollection);
 void clearScreen();
 void pause();
-bool validateInventoryNumber(std::list<Stand> *standCollection, int searchNumber);
-void displayInventory(std::list<Stand> *standCollection, std::string type);
+bool validateInventoryNumber(std::list<Stand> &standCollection, int searchNumber);
+void displayInventory(std::list<Stand> &standCollection, std::string type);
 #endif /* STANDMANAGER_H */
 

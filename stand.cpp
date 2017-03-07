@@ -7,3 +7,6 @@ Stand::Stand(){
     description = "";
     income = 0.00;
 }
+void Stand::setCheckedOut(bool status){
+    checkedOut = status;
+}

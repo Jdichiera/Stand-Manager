@@ -16,7 +16,7 @@
 
 //Cake stand class
 class Stand{
-private:
+public:
     int inventoryNumber;
     double cost;
     bool checkedOut;
@@ -40,9 +40,7 @@ public:
         return income;
     }
     
-    void setCheckedOut(bool status){
-        checkedOut = status;
-    }
+    void setCheckedOut(bool status);
     void setInventoryNumber(int invNumber){
         inventoryNumber = invNumber;
     }
