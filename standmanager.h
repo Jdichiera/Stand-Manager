@@ -35,7 +35,7 @@ void addStand(std::list<Stand> &standCollection);
 void removeStand(std::list<Stand> &standCollection);
 void quitProgram(std::list<Stand> &standCollection, std::string fileName);
 
-void save(std::list<Stand> &standCollection, std::string fileName);
+void save(std::list<Stand> standCollection, std::string fileName);
 void load(std::string fileName, std::list<Stand> &standCollection);
 void clearScreen();
 void pause();

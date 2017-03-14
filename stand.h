@@ -24,35 +24,16 @@ public:
     double income;
     
 public:
-    int getInventoryNumber(){
-        return inventoryNumber;
-    }
-    double getCost(){
-        return cost;
-    }
-    bool getCheckedOut(){
-        return checkedOut;
-    }
-    std::string getDescription(){
-        return description;
-    }
-    double getIncome(){
-        return income;
-    }
-    
+    int getInventoryNumber();
+    double getCost();
+    bool getCheckedOut();
+    std::string getDescription();
+    double getIncome();
     void setCheckedOut(bool status);
-    void setInventoryNumber(int invNumber){
-        inventoryNumber = invNumber;
-    }
-    void setCost(double standcost){
-        cost = standcost;
-    }
-    void setDescription(std::string newDescription){
-        description = newDescription;
-    }
-    void setIncome(double amount){
-        income += amount;
-    }
+    void setInventoryNumber(int invNumber);
+    void setCost(double standcost);
+    void setDescription(std::string newDescription);
+    void setIncome(double amount);
     
     
     Stand();

@@ -40,8 +40,8 @@ int displayMenu(std::list<Stand> &standCollection, std::string fileName){
                 removeStand(standCollection);
                 break;
             case 7 :
-                //quitProgram(standCollection, fileName);
-                std::cout << "Quitting Program" << std::endl;
+                quitProgram(standCollection, fileName);
+                //std::cout << "Quitting Program" << std::endl;
                 return 0;
                 break;
             default :
@@ -227,7 +227,7 @@ void quitProgram(std::list<Stand> &standCollection, std::string fileName){
 };
 
 //Saves the inventory to a text file
-void save(std::list<Stand> &standCollection, std::string fileName){
+void save(std::list<Stand> standCollection, std::string fileName){
     //open write file
     std::ofstream writeFile;
 
