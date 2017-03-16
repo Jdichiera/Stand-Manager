@@ -22,6 +22,7 @@
 #include <fstream>
 #include <sstream>
 #include <stdlib.h>
+#include <limits>
 
 #include "stand.h"
 

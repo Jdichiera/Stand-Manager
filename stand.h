@@ -16,7 +16,7 @@
 
 //Cake stand class
 class Stand{
-public:
+private:
     int inventoryNumber;
     double cost;
     bool checkedOut;

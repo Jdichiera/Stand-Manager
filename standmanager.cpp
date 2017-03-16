@@ -4,6 +4,7 @@
 
 
 
+
 //This function will display the main menu
 int displayMenu(std::list<Stand> &standCollection, std::string fileName){
     clearScreen();
@@ -70,12 +71,12 @@ void checkOutStand(std::list<Stand> &standCollection){
             pause();
         }else{
             if(validateInventoryNumber(standCollection, inventoryNumber)){
-                for(auto &stand : standCollection){
+                for(Stand &stand : standCollection){
                     if(inventoryNumber == stand.getInventoryNumber()){
                         if(!stand.getCheckedOut()){
                             std::cout << "Checking out stand" << std::endl;
                             //stand.setCheckedOut(true);
-                            stand.checkedOut = true;
+                            stand.setCheckedOut(true);
                         }else{
                             std::cout << "Stand already checked out" << std::endl;
                         }
@@ -103,7 +104,7 @@ void checkInStand(std::list<Stand> &standCollection){
         std::cout << "Returning to the main menu ..." << std::endl;
     }else{
         if(validateInventoryNumber(standCollection, inventoryNumber)){
-            for(auto &stand : standCollection){
+            for(Stand &stand : standCollection){
                 if(inventoryNumber == stand.getInventoryNumber()){
                     if(stand.getCheckedOut()){
                         double income = 0;
@@ -131,7 +132,7 @@ void standStatus(std::list<Stand> &standCollection){
     displayInventory(standCollection, "all");
     std::cin >> inventoryNumber;
     if(validateInventoryNumber(standCollection, inventoryNumber)){
-        for(auto stand : standCollection){
+        for(Stand stand : standCollection){
             if(inventoryNumber == stand.getInventoryNumber()){
                 std::cout << "Inventory #: " << stand.getInventoryNumber() << std::endl;
                 std::cout << "Cost : $" << std::fixed << std::setprecision(2) << stand.getCost() << std::endl;
@@ -155,7 +156,7 @@ void runReport(std::list<Stand> &standCollection){
                 << std::setw(10) << "Cost" 
                 << std::setw(10) << "Out" 
                 << std::setw(10) << "Income" << std::endl;
-    for(auto stand : standCollection){
+    for(Stand stand : standCollection){
         std::cout << std::setw(10) << std::right <<  stand.getInventoryNumber() 
                     << std::setw(10) << stand.getCost() 
                     << std::setw(10) << stand.getCheckedOut() 
@@ -233,7 +234,7 @@ void save(std::list<Stand> standCollection, std::string fileName){
 
     writeFile.open(fileName);
     
-    for(auto stand : standCollection){
+    for(Stand stand : standCollection){
         writeFile << stand.getInventoryNumber() << ";" << stand.getCost() << ";" 
                     << stand.getCheckedOut() << ";" << stand.getIncome() << ";"
                     << stand.getDescription() << std::endl;
@@ -259,7 +260,7 @@ void load(std::string fileName, std::list<Stand> &standCollection){
         double income;
         std::string description;
         
-        size_t pos = 0;
+        std::size_t pos = 0;
         std::string tempArray[4];
         std::string delimiter = ";";
         
@@ -294,13 +295,13 @@ void displayInventory(std::list<Stand> &standCollection, std::string type){
     std::list<Stand> stands;
         
     if(type == "checkedout"){
-        for(auto stand : standCollection){
+        for(Stand stand : standCollection){
             if(stand.getCheckedOut() == true){
                 stands.push_back(stand);
             }
         }
     }else if(type == "available"){
-        for(auto stand : standCollection){
+        for(Stand stand : standCollection){
             if(stand.getCheckedOut() == false){
                 stands.push_back(stand);
             }
@@ -316,7 +317,7 @@ void displayInventory(std::list<Stand> &standCollection, std::string type){
 
 //Helper function that validates an inventory number
 bool validateInventoryNumber(std::list<Stand> &standCollection, int searchNumber){
-    for(auto stand : standCollection){
+    for(Stand stand : standCollection){
         if(searchNumber == stand.getInventoryNumber()){
             return true;
         };
