@@ -7,13 +7,13 @@ CND_BASEDIR=`pwd`
 CND_BUILDDIR=build
 CND_DISTDIR=dist
 # Debug configuration
-CND_PLATFORM_Debug=GNU-MacOSX
-CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-MacOSX
+CND_PLATFORM_Debug=Cygwin-Windows
+CND_ARTIFACT_DIR_Debug=dist/Debug/Cygwin-Windows
 CND_ARTIFACT_NAME_Debug=stand-manager
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-MacOSX/stand-manager
-CND_PACKAGE_DIR_Debug=dist/Debug/GNU-MacOSX/package
+CND_ARTIFACT_PATH_Debug=dist/Debug/Cygwin-Windows/stand-manager
+CND_PACKAGE_DIR_Debug=dist/Debug/Cygwin-Windows/package
 CND_PACKAGE_NAME_Debug=stand-manager.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-MacOSX/package/stand-manager.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/Cygwin-Windows/package/stand-manager.tar
 # Release configuration
 CND_PLATFORM_Release=GNU-MacOSX
 CND_ARTIFACT_DIR_Release=dist/Release/GNU-MacOSX

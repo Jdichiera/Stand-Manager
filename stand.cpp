@@ -10,7 +10,18 @@ Stand::Stand(){
 void Stand::setCheckedOut(bool status){
     checkedOut = status;
 }
-
+void Stand::setInventoryNumber(int invNumber){
+    inventoryNumber = invNumber;
+}
+void Stand::setCost(double standcost){
+    cost = standcost;
+}
+void Stand::setDescription(std::string newDescription){
+    description = newDescription;
+}
+void Stand::setIncome(double amount){
+    income += amount;
+}
 int Stand::getInventoryNumber(){
     return inventoryNumber;
 }
@@ -25,17 +36,4 @@ std::string Stand::getDescription(){
 }
 double Stand::getIncome(){
     return income;
-}
-
-void Stand::setInventoryNumber(int invNumber){
-    inventoryNumber = invNumber;
-}
-void Stand::setCost(double standcost){
-    cost = standcost;
-}
-void Stand::setDescription(std::string newDescription){
-    description = newDescription;
-}
-void Stand::setIncome(double amount){
-    income += amount;
 }

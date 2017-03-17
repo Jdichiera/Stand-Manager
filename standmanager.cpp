@@ -1,10 +1,5 @@
 #include "standmanager.h"
 
-
-
-
-
-
 //This function will display the main menu
 int displayMenu(std::list<Stand> &standCollection, std::string fileName){
     clearScreen();
@@ -61,30 +56,29 @@ void checkOutStand(std::list<Stand> &standCollection){
     std::cout << "--== Check Out Stand ==--" << std::endl;
     std::cout << "Available stands : " << std::endl;
     
-        displayInventory(standCollection, "available");
-        std::cout << "Enter the inventory number of the stand you want to check out." 
-                    << "\n(Enter -1 to return to menu)" << std::endl;
-        std::cin >> inventoryNumber;
+    displayInventory(standCollection, "available");
+    std::cout << "Enter the inventory number of the stand you want to check out." 
+                << "\n(Enter -1 to return to menu)" << std::endl;
+    std::cin >> inventoryNumber;
 
-        if(inventoryNumber == -1){
-            std::cout << "Returning to the main menu ..." << std::endl;
-            pause();
-        }else{
-            if(validateInventoryNumber(standCollection, inventoryNumber)){
-                for(Stand &stand : standCollection){
-                    if(inventoryNumber == stand.getInventoryNumber()){
-                        if(!stand.getCheckedOut()){
-                            std::cout << "Checking out stand" << std::endl;
-                            //stand.setCheckedOut(true);
-                            stand.setCheckedOut(true);
-                        }else{
-                            std::cout << "Stand already checked out" << std::endl;
-                        }
+    if(inventoryNumber == -1){
+        std::cout << "Returning to the main menu ..." << std::endl;
+    }else{
+        if(validateInventoryNumber(standCollection, inventoryNumber)){
+            for(Stand &stand : standCollection){
+                if(inventoryNumber == stand.getInventoryNumber()){
+                    if(!stand.getCheckedOut()){
+                        std::cout << "Checking out stand" << std::endl;
+                        //stand.setCheckedOut(true);
+                        stand.setCheckedOut(true);
+                    }else{
+                        std::cout << "Stand already checked out" << std::endl;
                     }
                 }
             }
-        pause();
+        }
     }
+    pause();
 };
 
 //Allows users to check in a stand that has been checked out.
@@ -142,8 +136,8 @@ void standStatus(std::list<Stand> &standCollection){
             }
         }
     }else{
-                std::cout << "Stand not found" << std::endl;
-            }
+        std::cout << "Stand not found" << std::endl;
+    }
     pause();
 };
 
@@ -180,19 +174,19 @@ void addStand(std::list<Stand> &standCollection){
     std::cin >> invNumber;
     if(validateInventoryNumber(standCollection, invNumber)){
         std::cout << "Stand already exists, returning to menu ..." << std::endl;
+    }else{
+        std::cout << "Please enter stand cost : $";
+        std::cin >> standCost;
+        std::cout << "Please enter stand description (limit 15 characters): " << std::endl;
+        std::cin >> description;
+
+        Stand stand;
+        stand.setInventoryNumber(invNumber);
+        stand.setCost(standCost);
+        stand.setDescription(description);
+
+        standCollection.push_back(stand);
     }
-    std::cout << "Please enter stand cost : $";
-    std::cin >> standCost;
-    std::cout << "Please enter stand description (limit 15 characters): " << std::endl;
-    std::cin >> description;
-    
-    Stand stand;
-    stand.setInventoryNumber(invNumber);
-    stand.setCost(standCost);
-    stand.setDescription(description);
-    
-    standCollection.push_back(stand);
-    
     pause();
 };
     
